@@ -174,3 +174,5 @@ cython_debug/
 models/
 batch_job_scripts/
 results/
+wandb/
+data/

@@ -7,9 +7,11 @@
 * [Data](#data)
 * [Workflow](#workflow)
   * [EDA and data generation for models](#eda-and-data-generation-for-models)
+  * [Comparing annotations with field data](#comparing-annotations-with-field-data)
   * [Model training](#model-training)
   * [Detection results](#detection-results)
-  * [Comparison with field data](#comparison-with-field-data)
+  * [Comparing results with field data](#comparing-results-with-field-data)
+
 * [Authors](#authors)
 
 ## About
@@ -34,6 +36,9 @@ All steps of the workflow are described either in scripts or Jupyter notebooks.
 
 Presented in notebook [1_dataset_description_and_generation](notebooks/1_dataset_description_and_generation.ipynb)
 
+### Comparing annotations with field data
+
+Presented in notebook [2_comparing_annotations_and_field_data](notebooks/2_comparing_annotations_and_field_data.ipynb)
 
 ### Model training
 
@@ -43,7 +48,7 @@ Presented in notebook [1_dataset_description_and_generation](notebooks/1_dataset
 
 
 
-### Comparison with field data
+### Comparing results with field data
 
 
 
