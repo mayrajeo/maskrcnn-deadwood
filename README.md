@@ -42,10 +42,11 @@ Presented in notebook [2_comparing_annotations_and_field_data](notebooks/2_compa
 
 ### Model training
 
-
+Example of model training is presented in [3_mask_rcnn_model_training](notebooks/3_mask_rcnn_model_training.ipynb). All models were trained as a batch job instead of running the notebook.
 
 ### Detection results
 
+The results are interpreted in two levels: patch level and virtual plot level. Patch level (512x512 pixel images) are show in [4_patch_level_results](notebooks/4_patch_level_results.ipynb), and virtual plot level results with and without post-processing are show in [5_virtual_plot_level_results](notebooks/5_virtual_plot_level_results.ipynb).
 
 
 ### Comparing results with field data
