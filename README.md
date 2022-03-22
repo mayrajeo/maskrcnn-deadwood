@@ -48,10 +48,9 @@ Example of model training is presented in [3_mask_rcnn_model_training](notebooks
 
 The results are interpreted in two levels: patch level and virtual plot level. Patch level (512x512 pixel images) are show in [4_patch_level_results](notebooks/4_patch_level_results.ipynb), and virtual plot level results with and without post-processing are show in [5_virtual_plot_level_results](notebooks/5_virtual_plot_level_results.ipynb).
 
+### Evaluation with plot-level metrics
 
-### Comparing results with field data
-
-
+In addition to object detection metrics, the results are also compared based on forest charasteristics, such as estimated total volume of fallen deadwood, the distributions for length and dbh estimations and such. These are shown in [6_result_comparison_with_field_data](notebooks/6_result_comparison_with_field_data.ipynb).
 
 ## Authors
 
