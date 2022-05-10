@@ -16,6 +16,11 @@
 
 ## About
 
+Deadwood and decaying wood are the most important components for the biodiversity of boreal forests, and it has been estimated that around a quarter of all flora and fauna in Finland depend on that. However, there is a severe lack of stand-level deadwood data in Finland, as the operational inventories either focus on the large-scale estimates or omit deadwood altogether. Unmanned Aerial Vehicles (UAVs) are the only method for remotely mapping small objects, such as fallen deadwood, as even the most spatially accurate commercial satellites provide 30cm ground sampling distance, compared to less than 5 cm that is easily achievable with UAVs.
+
+In this work, we utilized Mask R-CNN to detect individual standing and fallen deadwood instances from RGB UAV imagery. We manually annotated over 14 000 deadwood instances from two separate study sites to use as the training and validation data, and also compared these data to field-measured deadwood data. Our models achieved test set Average Precision (AP) of 0.284 for the same geographical area the models were trained on, and AP of 0.220 for geographically distinct area used only for testing. 
+
+In addition to instance-level deadwood maps, we also estimated stand-level characteristics for the numbers of deadwood. In addition, we estimated the approximate total volume of fallen deadwood based on the annotated polygons. These stand-level features clearly show the borders of the conserved forest, and the volume estimations are able to distinguish between naturally formed deadwood hotspot and areas with logging remnants. The proposed method enables deadwood mapping for larger areas, complementing the traditional field work. 
 
 
 ## Getting started
@@ -46,11 +51,15 @@ Example of model training is presented in [3_mask_rcnn_model_training](notebooks
 
 ### Detection results
 
-The results are interpreted in two levels: patch level and virtual plot level. Patch level (512x512 pixel images) are show in [4_patch_level_results](notebooks/4_patch_level_results.ipynb), and virtual plot level results with and without post-processing are show in [5_virtual_plot_level_results](notebooks/5_virtual_plot_level_results.ipynb).
+The results were interpreted in two levels: patch level and virtual plot level. Patch level (512x512 pixel images) are show in [4_patch_level_results](notebooks/4_patch_level_results.ipynb), and virtual plot level results with and without post-processing are show in [5_virtual_plot_level_results](notebooks/5_virtual_plot_level_results.ipynb).
 
 ### Evaluation with plot-level metrics
 
-In addition to object detection metrics, the results are also compared based on forest charasteristics, such as estimated total volume of fallen deadwood, the distributions for length and dbh estimations and such. These are shown in [6_result_comparison_with_field_data](notebooks/6_result_comparison_with_field_data.ipynb).
+In addition to object detection metrics, the results were also compared based on forest charasteristics, such as estimated total volume of fallen deadwood, the distributions for length and DBH estimations and such. These are shown in [6_result_comparison_with_field_data](notebooks/6_result_comparison_with_field_data.ipynb).
+
+### Deriving stand-level characteristics
+
+Finally, we used our models to derive stand-level characteristics for deadwood: number of deadwood per hectare, number of standing deadwood per hectare, number of fallen deadwood per hectare and estimated volume of fallen deadwood per hectare, as show in [7_deriving_standwise_metrics_for_evo](notebooks/7_deriving_standwise_metrics_for_evo.ipynb).
 
 ## Authors
 
