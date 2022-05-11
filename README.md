@@ -1,5 +1,7 @@
 # Deadwood detection from RGB UAV imagery using Mask R-CNN
 
+<img src='repo_images/graph_abstract.png'>
+
 ## Table of contents
 
 * [About](#about)
