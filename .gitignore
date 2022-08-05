@@ -177,3 +177,5 @@ results/
 wandb/
 data/
 _docs/
+.quarto
+notebooks/images/
