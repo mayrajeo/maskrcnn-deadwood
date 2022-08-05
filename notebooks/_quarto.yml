@@ -1,0 +1,59 @@
+project:
+  type: website
+  output-dir: _docs
+  preview:
+    port: 3000
+    browser: false
+  render:
+    - 0_index.ipynb
+    - 1_dataset_description_and_generation.ipynb
+    - 2_comparing_annotations_and_field_data.ipynb
+    - 3_mask_rcnn_model_training.ipynb
+    - 4_patch_level_results.ipynb
+    - 5_virtual_plot_level_results.ipynb
+    - 6_result_comparison_with_field_data.ipynb
+    - 7_deriving_standwise_metrics_for_evo.ipynb
+
+      
+format:
+  html:
+    theme: spacelab
+    css: styles.css
+    toc: true
+    page-layout: full
+    
+website:
+  title: "Automated deadwood detection from UAV RGB imagery"
+  description: "Automated deadwood detection from UAV RGB imagery"
+  execute: 
+    enabled: false
+  twitter-card: 
+    creator: "@mayrajeo"
+  open-graph: true
+  reader-mode: true
+  repo-branch: main
+  repo-url: https://github.com/jaeeolma/maskrcnn-deadwood/tree/main/
+  repo-actions: [source]
+  navbar:
+    background: primary
+    search: true
+    right:
+      - icon: github
+        href: https://github.com/jaeeolma/maskrcnn-deadwood/tree/main/
+  sidebar:
+    style: "floating"
+    contents:
+      - 0_index.ipynb
+      - section: "Workflow"
+        contents: 
+          - 1_dataset_description_and_generation.ipynb
+          - 2_comparing_annotations_and_field_data.ipynb
+          - 3_mask_rcnn_model_training.ipynb
+          - 4_patch_level_results.ipynb
+          - 5_virtual_plot_level_results.ipynb
+          - 6_result_comparison_with_field_data.ipynb
+          - 7_deriving_standwise_metrics_for_evo.ipynb
+
+#metadata-files: 
+#  - sidebar.yml
+#  - custom.yml

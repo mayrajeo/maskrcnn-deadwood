@@ -176,3 +176,4 @@ batch_job_scripts/
 results/
 wandb/
 data/
+_docs/
