@@ -18,7 +18,7 @@ jobs:
           tinytex: false
 
       - name: create docs
-        run: quarto render notebooks/ --output_dir ../_docs
+        run: quarto render notebooks/ --output-dir ../_docs
 
       - name: deploy to GitHub pages
         uses: peaceiris/actions-gh-pages@v3
