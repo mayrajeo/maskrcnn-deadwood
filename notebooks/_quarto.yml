@@ -13,6 +13,7 @@ project:
     - 5_virtual_plot_level_results.ipynb
     - 6_result_comparison_with_field_data.ipynb
     - 7_deriving_standwise_metrics_for_evo.ipynb
+    - 8_configs.ipynb
 
       
 format:
@@ -32,18 +33,20 @@ website:
   open-graph: true
   reader-mode: true
   repo-branch: main
-  repo-url: https://github.com/jaeeolma/maskrcnn-deadwood/tree/main/
+  repo-subdir: notebooks
+  repo-url: https://github.com/jaeeolma/maskrcnn-deadwood/
   repo-actions: [source]
   navbar:
     background: primary
     search: true
     right:
       - icon: github
-        href: https://github.com/jaeeolma/maskrcnn-deadwood/tree/main/
+        href: https://github.com/jaeeolma/maskrcnn-deadwood/
   sidebar:
     style: "floating"
     contents:
-      - 0_index.ipynb
+      - text: Introduction
+        file: 0_index.ipynb
       - section: "Workflow"
         contents: 
           - 1_dataset_description_and_generation.ipynb
@@ -53,6 +56,9 @@ website:
           - 5_virtual_plot_level_results.ipynb
           - 6_result_comparison_with_field_data.ipynb
           - 7_deriving_standwise_metrics_for_evo.ipynb
+      - text: Running models with your own data
+        file: 8_configs.ipynb
+  page-navigation: true
 
 #metadata-files: 
 #  - sidebar.yml
