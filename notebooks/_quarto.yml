@@ -10,7 +10,7 @@ project:
     - 2_comparing_annotations_and_field_data.ipynb
     - 3_mask_rcnn_model_training.ipynb
     - 4_patch_level_results.ipynb
-    - 5_virtual_plot_level_results.ipynb
+    - 5_scene_level_results.ipynb
     - 6_result_comparison_with_field_data.ipynb
     - 7_deriving_standwise_metrics_for_evo.ipynb
     - 8_configs.ipynb
@@ -53,7 +53,7 @@ website:
           - 2_comparing_annotations_and_field_data.ipynb
           - 3_mask_rcnn_model_training.ipynb
           - 4_patch_level_results.ipynb
-          - 5_virtual_plot_level_results.ipynb
+          - 5_scene_level_results.ipynb
           - 6_result_comparison_with_field_data.ipynb
           - 7_deriving_standwise_metrics_for_evo.ipynb
       - text: Running models with your own data
