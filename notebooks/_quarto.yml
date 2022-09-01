@@ -26,8 +26,6 @@ format:
 website:
   title: "Automated deadwood detection from UAV RGB imagery"
   description: "Automated deadwood detection from UAV RGB imagery"
-  execute: 
-    enabled: false
   twitter-card: 
     creator: "@mayrajeo"
   open-graph: true
