@@ -1,10 +1,48 @@
 import geopandas as gpd
+import rasterio as rio
+import itertools
 from shapely.geometry import Polygon
 import numpy as np
 import pandas as pd
 from shapely.ops import unary_union
 from drone_detector.utils import fix_multipolys
 from tqdm import tqdm
+
+def make_grid(path, gridsize_x:int=640, gridsize_y:int=480, 
+              overlap=(100,100)) -> gpd.GeoDataFrame:
+    """
+    Creates a grid template with `gridsize_x` times `gridsize_y` cells, with `overlap` pixels of overlap based on geotiff file in `path`. Returns a gpd.GeoDataFrame with `RyyCxx` identifier for each geometry BUGGED and replaced with rio_windows in tile_raster
+    """
+    with rio.open(path) as src:
+        tfm = src.transform
+        x_size = src.width
+        y_size = src.height
+    xres = tfm[0]
+    ulx = tfm[2]
+    yres = tfm[4]
+    uly = tfm[5]
+    lrx = ulx + (x_size * xres)
+    lry = uly + (y_size * yres)
+    # number of output cells is calculated like conv output
+    ncols = int(np.ceil((np.ceil((lrx - ulx) / xres)) - gridsize_x) / (gridsize_x - overlap[0]) + 1)
+    nrows = int(np.ceil((np.ceil((lry - uly) / yres)) - gridsize_y) / (gridsize_y - overlap[1]) + 1)
+    polys = []
+    names = []
+    for col, row in (itertools.product(range(ncols), range(nrows))):
+        ytop = lry - row * (yres * (gridsize_y - overlap[1]))
+        ybot = ytop - (yres * gridsize_y)
+        xleft = ulx + col * (xres * (gridsize_x - overlap[0]))
+        xright = xleft + (xres * gridsize_x)
+        polys.append(Polygon([(xleft,ytop), (xright,ytop), (xright,ybot), (xleft,ybot)]))
+        names.append(f'R{row}C{col}')
+    grid = gpd.GeoDataFrame({'cell': names, 'geometry':polys})
+    
+    with rio.open(path) as src:
+        crs = src.crs
+    grid.crs = crs
+    
+    return grid
+
 
 def intersection_over_area(poly_1:Polygon, poly_2:Polygon) -> float:
     "Proportion of the overlap of poly_1 and poly_2 of the area of poly_1"
