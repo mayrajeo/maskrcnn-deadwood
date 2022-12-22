@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.280">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Janne Mäyrä">
+<meta name="dcterms.date" content="2022-12-22">
+
+<title>Automated deadwood detection from UAV RGB imagery - Comparison of plot characteristics and digitized deadwood</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./3_mask_rcnn_model_training.html" rel="next">
+<link href="./1_dataset_description_and_generation.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="Automated deadwood detection from UAV RGB imagery - Comparison of plot characteristics and digitized deadwood">
+<meta property="og:description" content="The following shows how we compared the field-measured data from both study sites and annotations that are located within these plots.">
+<meta property="og:site-name" content="Automated deadwood detection from UAV RGB imagery">
+<meta name="twitter:title" content="Automated deadwood detection from UAV RGB imagery - Comparison of plot characteristics and digitized deadwood">
+<meta name="twitter:description" content="The following shows how we compared the field-measured data from both study sites and annotations that are located within these plots.">
+<meta name="twitter:creator" content="@mayrajeo">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Automated deadwood detection from UAV RGB imagery</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jaeeolma/maskrcnn-deadwood/"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-reader-toggle nav-link" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+              </div>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">Comparison of plot characteristics and digitized deadwood</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0_index.html" class="sidebar-item-text sidebar-link">Introduction</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Workflow</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./1_dataset_description_and_generation.html" class="sidebar-item-text sidebar-link">Dataset description and generation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2_comparing_annotations_and_field_data.html" class="sidebar-item-text sidebar-link active">Comparison of plot characteristics and digitized deadwood</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3_mask_rcnn_model_training.html" class="sidebar-item-text sidebar-link">Mask R-CNN model training</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./4_patch_level_results.html" class="sidebar-item-text sidebar-link">Patch level results</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./5_scene_level_results.html" class="sidebar-item-text sidebar-link">Scene level results</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./6_result_comparison_with_field_data.html" class="sidebar-item-text sidebar-link">Result comparison with field data</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./7_deriving_standwise_metrics_for_evo.html" class="sidebar-item-text sidebar-link">Deriving deadwood statistics for full Evo study area</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./8_configs.html" class="sidebar-item-text sidebar-link">Running models with your own data</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#hiidenportti" id="toc-hiidenportti" class="nav-link active" data-scroll-target="#hiidenportti"><span class="toc-section-number">1</span>  Hiidenportti</a></li>
+  <li><a href="#sudenpesänkangas" id="toc-sudenpesänkangas" class="nav-link" data-scroll-target="#sudenpesänkangas"><span class="toc-section-number">2</span>  Sudenpesänkangas</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jaeeolma/maskrcnn-deadwood/blob/main/notebooks/2_comparing_annotations_and_field_data.ipynb" class="toc-action">View source</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content column-body" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">Comparison of plot characteristics and digitized deadwood</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Janne Mäyrä </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">December 22, 2022</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> drone_detector.utils <span class="im">import</span> <span class="op">*</span> </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> drone_detector.imports <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> rasterio.mask <span class="im">as</span> rio_mask</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>sns.set_style(<span class="st">'whitegrid'</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>sys.path.append(<span class="st">'..'</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.tree_functions <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The following shows how we compared the field-measured data from both study sites and annotations that are located within these plots.</p>
+<section id="hiidenportti" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="hiidenportti"><span class="header-section-number">1</span> Hiidenportti</h2>
+<p>Read data and do some wrangling.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>field_data_path <span class="op">=</span> Path(<span class="st">'../data/hiidenportti'</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>anns <span class="op">=</span> gpd.read_file(<span class="st">'../../data/raw/hiidenportti/virtual_plots/all_deadwood_hiidenportti.geojson'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>plot_circles <span class="op">=</span> gpd.read_file(field_data_path<span class="op">/</span><span class="st">'plot_circles.geojson'</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>field_data <span class="op">=</span> pd.read_csv(field_data_path<span class="op">/</span><span class="st">'all_plot_data.csv'</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>virtual_plot_grid <span class="op">=</span> gpd.read_file(field_data_path<span class="op">/</span><span class="st">'envelopes_with_trees.geojson'</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>conservation_areas <span class="op">=</span> gpd.read_file(<span class="st">'../data/common/LsAlueValtio.shp'</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>cons_hp <span class="op">=</span> conservation_areas[conservation_areas.geometry.intersects(box(<span class="op">*</span>anns.total_bounds))]</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>cons_hp <span class="op">=</span> gpd.clip(cons_hp, virtual_plot_grid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Filter plot circles so that only those present in scenes remain.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>plot_circles[<span class="st">'in_vplot'</span>] <span class="op">=</span> plot_circles.<span class="bu">apply</span>(<span class="kw">lambda</span> row: <span class="dv">1</span> <span class="cf">if</span> <span class="bu">any</span>(virtual_plot_grid.geometry.contains(row.geometry)) </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                                              <span class="cf">else</span> <span class="dv">0</span>, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>plot_circles[<span class="st">'id'</span>] <span class="op">=</span> plot_circles[<span class="st">'id'</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>field_data <span class="op">=</span> field_data[field_data.<span class="bu">id</span>.isin(plot_circles[plot_circles.in_vplot<span class="op">==</span><span class="dv">1</span>].<span class="bu">id</span>.unique())]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>field_data.rename(columns<span class="op">=</span> {c: c.replace(<span class="st">'.'</span>,<span class="st">'_'</span>) <span class="cf">for</span> c <span class="kw">in</span> field_data.columns}, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>dw_cols <span class="op">=</span> [<span class="st">'id'</span>] <span class="op">+</span> [c <span class="cf">for</span> c <span class="kw">in</span> field_data.columns <span class="cf">if</span> <span class="st">'dw'</span> <span class="kw">in</span> c]</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>plot_dw_data <span class="op">=</span> field_data[dw_cols].copy()</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>plot_circles <span class="op">=</span> plot_circles[plot_circles.in_vplot <span class="op">==</span> <span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Read individual tree measurements.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tree_data <span class="op">=</span> pd.read_csv(field_data_path<span class="op">/</span><span class="st">'hp_tree_data_fixed_1512.csv'</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>tree_data <span class="op">=</span> tree_data[tree_data.plot_id.isin(plot_dw_data.<span class="bu">id</span>.unique())]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Count the number of deadwood (<code>n_dw</code>), fallen deadwood (<code>n_ddw</code>) and standing deadwood (<code>n_udw</code>) from the individual field data measurements.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'n_dw_plot'</span>] <span class="op">=</span> plot_dw_data.<span class="bu">id</span>.<span class="bu">apply</span>(<span class="kw">lambda</span> row: <span class="bu">len</span>(tree_data[tree_data.plot_id <span class="op">==</span> row]))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'n_ddw_plot'</span>] <span class="op">=</span> plot_dw_data.<span class="bu">id</span>.<span class="bu">apply</span>(<span class="kw">lambda</span> row: <span class="bu">len</span>(tree_data[(tree_data.plot_id <span class="op">==</span> row) </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                                                                             <span class="op">&amp;</span> (tree_data.tree_class <span class="op">==</span> <span class="dv">4</span>)]))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'n_udw_plot'</span>] <span class="op">=</span> plot_dw_data.<span class="bu">id</span>.<span class="bu">apply</span>(<span class="kw">lambda</span> row: <span class="bu">len</span>(tree_data[(tree_data.plot_id <span class="op">==</span> row) </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                                                                             <span class="op">&amp;</span> (tree_data.tree_class <span class="op">==</span> <span class="dv">3</span>)]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> match_circular_plot(row, plots):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Match annotations with field plots"</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> p <span class="kw">in</span> plots.itertuples():</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> row.geometry.intersects(p.geometry):</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="bu">int</span>(p.<span class="bu">id</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>anns[<span class="st">'plot_id'</span>] <span class="op">=</span> anns.<span class="bu">apply</span>(<span class="kw">lambda</span> row: match_circular_plot(row, plot_circles), axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>anns_in_plots <span class="op">=</span> anns.overlay(plot_circles[[<span class="st">'geometry'</span>]])</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>anns_in_plots[<span class="st">'plot_id'</span>] <span class="op">=</span> anns_in_plots.plot_id.astype(<span class="bu">int</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Count the number of annotated deadwood instances in each circular field plot, as well as note which of the circular plots are located in the conserved areas.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'n_dw_ann'</span>] <span class="op">=</span> plot_dw_data.<span class="bu">apply</span>(<span class="kw">lambda</span> row: anns_in_plots.plot_id.value_counts()[row.<span class="bu">id</span>] </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                                              <span class="cf">if</span> row.<span class="bu">id</span> <span class="kw">in</span> anns_in_plots.plot_id.unique() <span class="cf">else</span> <span class="dv">0</span>, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'n_ddw_ann'</span>] <span class="op">=</span> plot_dw_data.<span class="bu">apply</span>(<span class="kw">lambda</span> row: anns_in_plots[anns_in_plots.groundwood<span class="op">==</span><span class="dv">2</span>].plot_id.value_counts()[row.<span class="bu">id</span>] </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                                              <span class="cf">if</span> row.<span class="bu">id</span> <span class="kw">in</span> anns_in_plots[anns_in_plots.groundwood<span class="op">==</span><span class="dv">2</span>].plot_id.unique() <span class="cf">else</span> <span class="dv">0</span>, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'n_udw_ann'</span>] <span class="op">=</span> plot_dw_data.<span class="bu">apply</span>(<span class="kw">lambda</span> row: anns_in_plots[anns_in_plots.groundwood<span class="op">==</span><span class="dv">1</span>].plot_id.value_counts()[row.<span class="bu">id</span>] </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                                              <span class="cf">if</span> row.<span class="bu">id</span> <span class="kw">in</span> anns_in_plots[anns_in_plots.groundwood<span class="op">==</span><span class="dv">1</span>].plot_id.unique() <span class="cf">else</span> <span class="dv">0</span>, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'geometry'</span>] <span class="op">=</span> plot_dw_data.<span class="bu">apply</span>(<span class="kw">lambda</span> row: plot_circles[plot_circles.<span class="bu">id</span> <span class="op">==</span> row.<span class="bu">id</span>].geometry.iloc[<span class="dv">0</span>], </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                                              axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>plot_dw_data <span class="op">=</span> gpd.GeoDataFrame(plot_dw_data, crs<span class="op">=</span>plot_circles.crs)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'conservation'</span>] <span class="op">=</span> plot_dw_data.<span class="bu">apply</span>(<span class="kw">lambda</span> row: <span class="dv">1</span> <span class="cf">if</span> <span class="bu">any</span>(cons_hp.geometry.contains(row.geometry))</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>                                                  <span class="cf">else</span> <span class="dv">0</span>, axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Add information about conservation area to tree data.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>tree_data[<span class="st">'conservation'</span>] <span class="op">=</span> tree_data.<span class="bu">apply</span>(<span class="kw">lambda</span> row: plot_dw_data[plot_dw_data.<span class="bu">id</span> <span class="op">==</span> row.plot_id].conservation.unique()[<span class="dv">0</span>], axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Plot the numbers. These show that we were able to annotate slighly less deadwood than what was measured in the field. On the other hand, especially in managed forests there were also several cases where there were more fallen deadwood annotations than field measured fallen deadwood. As the resolution of our data makes it impossible to accurately tell whether a fallen trunk had DBH less than 100mm, some of the annotations can be such that were determined too thin in the field. Other likely reason is that canopy obscured the deadwood instances, as the average canopy cover percentage was around 61 % for the field plots.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>plot_dw_data.pivot_table(index<span class="op">=</span><span class="st">'conservation'</span>, values<span class="op">=</span>[<span class="st">'n_ddw_plot'</span>, <span class="st">'n_udw_plot'</span>, <span class="st">'n_ddw_ann'</span>, <span class="st">'n_udw_ann'</span>], </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                         aggfunc<span class="op">=</span><span class="st">'sum'</span>, margins<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>n_ddw_ann</th>
+      <th>n_ddw_plot</th>
+      <th>n_udw_ann</th>
+      <th>n_udw_plot</th>
+    </tr>
+    <tr>
+      <th>conservation</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>248</td>
+      <td>217</td>
+      <td>49</td>
+      <td>75</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>48</td>
+      <td>96</td>
+      <td>10</td>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>All</th>
+      <td>296</td>
+      <td>313</td>
+      <td>59</td>
+      <td>99</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Get plot-wise canopy cover percentage based on LiDAR derived canopy height model as the percentage of plot area with height more than 2 meters.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pcts <span class="op">=</span> []</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> rio.<span class="bu">open</span>(<span class="st">'../../data/raw/hiidenportti/full_mosaics/CHM_Hiidenportti_epsg.tif'</span>) <span class="im">as</span> src:</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    crs <span class="op">=</span> src.crs</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> row <span class="kw">in</span> plot_dw_data.itertuples():</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        plot_im, plot_tfm <span class="op">=</span> rio_mask.mask(src, [row.geometry], crop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        pcts.append(plot_im[plot_im <span class="op">&gt;</span> <span class="dv">2</span>].shape[<span class="dv">0</span>] <span class="op">/</span> plot_im[plot_im <span class="op">&gt;=</span> <span class="dv">0</span>].shape[<span class="dv">0</span>])</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'canopy_cover_pct'</span>] <span class="op">=</span> pcts</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>pd.pivot_table(data<span class="op">=</span>plot_dw_data, index<span class="op">=</span>[<span class="st">'conservation'</span>], values<span class="op">=</span>[<span class="st">'canopy_cover_pct'</span>],</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>               aggfunc<span class="op">=</span>[<span class="st">'min'</span>, <span class="st">'max'</span>, <span class="st">'mean'</span>, <span class="st">'std'</span>, <span class="st">'count'</span>], margins<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>min</th>
+      <th>max</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>count</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>canopy_cover_pct</th>
+      <th>canopy_cover_pct</th>
+      <th>canopy_cover_pct</th>
+      <th>canopy_cover_pct</th>
+      <th>canopy_cover_pct</th>
+    </tr>
+    <tr>
+      <th>conservation</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.142006</td>
+      <td>0.947162</td>
+      <td>0.593817</td>
+      <td>0.187985</td>
+      <td>51</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.083333</td>
+      <td>0.855172</td>
+      <td>0.641549</td>
+      <td>0.176416</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>All</th>
+      <td>0.083333</td>
+      <td>0.947162</td>
+      <td>0.607263</td>
+      <td>0.184815</td>
+      <td>71</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Overall the conserved forests are a bit more dense, but not that much.</p>
+<p>Plot the relationship between annotated deadwood and field-measured deadwood. Each dot is a single field plot.</p>
+<div class="cell">
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-13-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>For annotated groundwood, as the annotations can be twisted due to e.g.&nbsp;orthorectification errors, we use the longest side of the smallest rotated rectangle that can be fit around the polygon as a proxy for the trunk length.</p>
+<p>Diameter can be approximated with the following approach. For each polygon,</p>
+<ol type="1">
+<li>Get minimum rotated rectangle</li>
+<li>Draw three lines that are perpendicular to the longer side of the minimum rotated rectangle, starting from the points of 10%, 50% and 90% of the length of the minimum rotated rectangle</li>
+<li>Intersect these lines with the polygon. Diameter is the mean lenght of these intersecting lines.</li>
+</ol>
+<p>This is not the same as DBH, but close enough.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>anns_in_plots[<span class="st">'tree_length'</span>] <span class="op">=</span> anns_in_plots.<span class="bu">apply</span>(<span class="kw">lambda</span> row: get_len(row.geometry), axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Compare the distributions of the downed trunk lengths. Both graphs only take the parts within the plots into account. Lengths are binned into 1m bins.</p>
+<p>As expected, the field measured fallen deadwood were clearly shorter than annotated deadwood. Most of the annotated fallen deadwood were shorter than 2 meters, while field measured trees were typically longer than 5 meters. However, this is most likely due to canopy obscuring the fallen deadwood, and some of the longer trees are annotated as multiple shorter ones. When comparing the difference in total lengths of field-measured trees and annotated trees, typically denser canopy cover meant also larger difference.</p>
+<div class="cell">
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-15-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-16-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>As expected, annotated trunks are clearly on average shorter than field measured.</p>
+<p>Compare the measured DBH for downed trees and estimated diameter of annotated downed deadwood. For annotated deadwood, the diameter is estimated for the whole tree, not only for the part within the field plot. DBHs are binned into 50mm bins.</p>
+<p>When comparing the DBH distributions for fallen deadwood, the diameter classes 125-150mm, 150-175mm and 175-200mm were clearly overrepresented in the annotated data. As these DBH classes were also the most common among field data, the reason for this could be the same as with length differences, and the visible trees area partially obscured by the canopy.</p>
+<div class="cell">
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-17-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-18-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Aggregate the above, first field data.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>pd.pivot_table(data<span class="op">=</span>tree_data[(tree_data.tree_class <span class="op">==</span> <span class="dv">4</span>)<span class="op">&amp;</span>(tree_data.DBH<span class="op">&gt;</span><span class="dv">0</span>)],</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>               index<span class="op">=</span>[<span class="st">'conservation'</span>], values<span class="op">=</span>[<span class="st">'l'</span>, <span class="st">'DBH'</span>],</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>               aggfunc<span class="op">=</span>[<span class="st">'mean'</span>, <span class="st">'min'</span>, <span class="st">'max'</span>, <span class="st">'count'</span>], margins<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="2" halign="left">mean</th>
+      <th colspan="2" halign="left">min</th>
+      <th colspan="2" halign="left">max</th>
+      <th colspan="2" halign="left">count</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>DBH</th>
+      <th>l</th>
+      <th>DBH</th>
+      <th>l</th>
+      <th>DBH</th>
+      <th>l</th>
+      <th>DBH</th>
+      <th>l</th>
+    </tr>
+    <tr>
+      <th>conservation</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>133.786875</td>
+      <td>6.768601</td>
+      <td>15.558197</td>
+      <td>0.518478</td>
+      <td>450.000000</td>
+      <td>16.700000</td>
+      <td>217</td>
+      <td>217</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>185.538932</td>
+      <td>7.588368</td>
+      <td>39.167120</td>
+      <td>0.214113</td>
+      <td>580.560964</td>
+      <td>18.000666</td>
+      <td>96</td>
+      <td>96</td>
+    </tr>
+    <tr>
+      <th>All</th>
+      <td>149.659711</td>
+      <td>7.020031</td>
+      <td>15.558197</td>
+      <td>0.214113</td>
+      <td>580.560964</td>
+      <td>18.000666</td>
+      <td>313</td>
+      <td>313</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Then annotations.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pd.pivot_table(data<span class="op">=</span>anns_in_plots[anns_in_plots.groundwood<span class="op">==</span><span class="dv">2</span>], index<span class="op">=</span>[<span class="st">'conservation'</span>], values<span class="op">=</span>[<span class="st">'tree_length'</span>, <span class="st">'diam'</span>],</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>               aggfunc<span class="op">=</span>[<span class="st">'mean'</span>, <span class="st">'min'</span>, <span class="st">'max'</span>, <span class="st">'count'</span>], margins<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="2" halign="left">mean</th>
+      <th colspan="2" halign="left">min</th>
+      <th colspan="2" halign="left">max</th>
+      <th colspan="2" halign="left">count</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>diam</th>
+      <th>tree_length</th>
+      <th>diam</th>
+      <th>tree_length</th>
+      <th>diam</th>
+      <th>tree_length</th>
+      <th>diam</th>
+      <th>tree_length</th>
+    </tr>
+    <tr>
+      <th>conservation</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>175.046987</td>
+      <td>1.818960</td>
+      <td>16.64560</td>
+      <td>0.095362</td>
+      <td>381.292305</td>
+      <td>6.485503</td>
+      <td>236</td>
+      <td>236</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>208.354703</td>
+      <td>2.083887</td>
+      <td>27.32243</td>
+      <td>0.149797</td>
+      <td>625.927586</td>
+      <td>5.907329</td>
+      <td>60</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <th>All</th>
+      <td>181.798551</td>
+      <td>1.872662</td>
+      <td>16.64560</td>
+      <td>0.095362</td>
+      <td>625.927586</td>
+      <td>6.485503</td>
+      <td>296</td>
+      <td>296</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Check the relationship between canopy cover and deadwood types. First standing deadwood.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> sns.lmplot(data<span class="op">=</span>plot_dw_data, x<span class="op">=</span><span class="st">'n_udw_plot'</span>, y<span class="op">=</span><span class="st">'canopy_cover_pct'</span>, col<span class="op">=</span><span class="st">'conservation'</span>, hue<span class="op">=</span><span class="st">'conservation'</span>, ci<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                legend<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>g.axes[<span class="dv">0</span>,<span class="dv">0</span>].set_title(<span class="st">'Managed forests'</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>g.axes[<span class="dv">0</span>,<span class="dv">1</span>].set_title(<span class="st">'Protected forests'</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>g.axes[<span class="dv">0</span>,<span class="dv">0</span>].set_xticks(<span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">10</span>,<span class="dv">2</span>))</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>g.axes[<span class="dv">0</span>,<span class="dv">1</span>].set_xticks(<span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">10</span>,<span class="dv">2</span>))</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>g.set_ylabels(<span class="st">'Canopy cover percentage ffor field plots'</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>g.set_xlabels(<span class="st">'Number of field-measured standing deadwood within plots'</span>)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-21-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>pd.pivot_table(data<span class="op">=</span>anns_in_plots[anns_in_plots.groundwood<span class="op">==</span><span class="dv">2</span>], index<span class="op">=</span>[<span class="st">'conservation'</span>], values<span class="op">=</span>[<span class="st">'tree_length'</span>, <span class="st">'diam'</span>],</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>               aggfunc<span class="op">=</span>[<span class="st">'mean'</span>, <span class="st">'min'</span>, <span class="st">'max'</span>, <span class="st">'count'</span>], margins<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="2" halign="left">mean</th>
+      <th colspan="2" halign="left">min</th>
+      <th colspan="2" halign="left">max</th>
+      <th colspan="2" halign="left">count</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>diam</th>
+      <th>tree_length</th>
+      <th>diam</th>
+      <th>tree_length</th>
+      <th>diam</th>
+      <th>tree_length</th>
+      <th>diam</th>
+      <th>tree_length</th>
+    </tr>
+    <tr>
+      <th>conservation</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>175.046987</td>
+      <td>1.818960</td>
+      <td>16.64560</td>
+      <td>0.095362</td>
+      <td>381.292305</td>
+      <td>6.485503</td>
+      <td>236</td>
+      <td>236</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>208.354703</td>
+      <td>2.083887</td>
+      <td>27.32243</td>
+      <td>0.149797</td>
+      <td>625.927586</td>
+      <td>5.907329</td>
+      <td>60</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <th>All</th>
+      <td>181.798551</td>
+      <td>1.872662</td>
+      <td>16.64560</td>
+      <td>0.095362</td>
+      <td>625.927586</td>
+      <td>6.485503</td>
+      <td>296</td>
+      <td>296</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> sns.lmplot(data<span class="op">=</span>plot_dw_data, x<span class="op">=</span><span class="st">'n_udw_ann'</span>, y<span class="op">=</span><span class="st">'canopy_cover_pct'</span>, col<span class="op">=</span><span class="st">'conservation'</span>, hue<span class="op">=</span><span class="st">'conservation'</span>, ci<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                legend<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>g.axes[<span class="dv">0</span>,<span class="dv">0</span>].set_title(<span class="st">'Managed forests'</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>g.axes[<span class="dv">0</span>,<span class="dv">1</span>].set_title(<span class="st">'Protected forests'</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>g.axes[<span class="dv">0</span>,<span class="dv">0</span>].set_xticks(<span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">10</span>,<span class="dv">2</span>))</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>g.axes[<span class="dv">0</span>,<span class="dv">1</span>].set_xticks(<span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">10</span>,<span class="dv">2</span>))</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>g.set_ylabels(<span class="st">'Canopy cover percentage for field plots'</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>g.set_xlabels(<span class="st">'Number of annotated standing deadwood'</span>)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-23-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Then fallen deadwood</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> sns.lmplot(data<span class="op">=</span>plot_dw_data, x<span class="op">=</span><span class="st">'n_ddw_plot'</span>, y<span class="op">=</span><span class="st">'canopy_cover_pct'</span>, col<span class="op">=</span><span class="st">'conservation'</span>, hue<span class="op">=</span><span class="st">'conservation'</span>, ci<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                legend<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>g.axes[<span class="dv">0</span>,<span class="dv">0</span>].set_title(<span class="st">'Managed forests'</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>g.axes[<span class="dv">0</span>,<span class="dv">1</span>].set_title(<span class="st">'Protected forests'</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>g.axes[<span class="dv">0</span>,<span class="dv">0</span>].set_xticks(<span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">21</span>,<span class="dv">2</span>))</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>g.axes[<span class="dv">0</span>,<span class="dv">1</span>].set_xticks(<span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">21</span>,<span class="dv">2</span>))</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>g.set_ylabels(<span class="st">'Canopy cover percentage for field plots'</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>g.set_xlabels(<span class="st">'Number of field-measured fallen deadwood within plots'</span>)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-24-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> sns.lmplot(data<span class="op">=</span>plot_dw_data, x<span class="op">=</span><span class="st">'n_ddw_ann'</span>, y<span class="op">=</span><span class="st">'canopy_cover_pct'</span>, col<span class="op">=</span><span class="st">'conservation'</span>, hue<span class="op">=</span><span class="st">'conservation'</span>,</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                legend<span class="op">=</span><span class="va">False</span>, ci<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>g.axes[<span class="dv">0</span>,<span class="dv">0</span>].set_title(<span class="st">'Managed forests'</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>g.axes[<span class="dv">0</span>,<span class="dv">1</span>].set_title(<span class="st">'Protected forests'</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>g.axes[<span class="dv">0</span>,<span class="dv">0</span>].set_xticks(<span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">21</span>,<span class="dv">2</span>))</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>g.axes[<span class="dv">0</span>,<span class="dv">1</span>].set_xticks(<span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">21</span>,<span class="dv">2</span>))</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>g.set_ylabels(<span class="st">'Total lengths (m) of field-measured groundwood within plots'</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>g.set_xlabels(<span class="st">'Total lengths (m) of annotated groundwood within plots'</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-25-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Plot the total lengths of groundwood located within a single field plot.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'n_dw_stand_field'</span>] <span class="op">=</span> plot_dw_data.<span class="bu">apply</span>(<span class="kw">lambda</span> row: <span class="bu">len</span>(tree_data[(tree_data.plot_id <span class="op">==</span> row.<span class="bu">id</span>) <span class="op">&amp;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                                                                                (tree_data.tree_class <span class="op">==</span> <span class="dv">3</span>)]),</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                                                      axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'n_dw_fall_field'</span>] <span class="op">=</span> plot_dw_data.<span class="bu">apply</span>(<span class="kw">lambda</span> row: <span class="bu">len</span>(tree_data[(tree_data.plot_id <span class="op">==</span> row.<span class="bu">id</span>) <span class="op">&amp;</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                                                                               ((tree_data.tree_class <span class="op">==</span> <span class="dv">4</span>)<span class="op">|</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                                                                                (tree_data.tree_class <span class="op">==</span> <span class="dv">5</span>))]),</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>                                                     axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'n_dw_tot_field'</span>] <span class="op">=</span> plot_dw_data.n_dw_stand_field <span class="op">+</span> plot_dw_data.n_dw_fall_field</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'l_gw_field'</span>] <span class="op">=</span> plot_dw_data.<span class="bu">apply</span>(<span class="kw">lambda</span> row: tree_data[(tree_data.plot_id <span class="op">==</span> row.<span class="bu">id</span>) <span class="op">&amp;</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>                                                                      (tree_data.tree_class <span class="op">==</span> <span class="dv">4</span>)].l.<span class="bu">sum</span>()</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>                                              , axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'l_gw_ann'</span>] <span class="op">=</span> plot_dw_data.<span class="bu">apply</span>(<span class="kw">lambda</span> row: anns_in_plots[(anns_in_plots.plot_id <span class="op">==</span> row.<span class="bu">id</span>) <span class="op">&amp;</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>                                                                        (anns_in_plots.layer <span class="op">==</span> <span class="st">'groundwood'</span>)</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>                                                                       ].tree_length.<span class="bu">sum</span>()</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>                                              , axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-27-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Total lengths for annotations are generally much less than field-measured.</p>
+<p>Plot the difference in the numbers of annotated deadwood.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'n_ddw_plot_diff'</span>] <span class="op">=</span> plot_dw_data.n_ddw_plot <span class="op">-</span> plot_dw_data.n_ddw_ann</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'n_udw_plot_diff'</span>] <span class="op">=</span> plot_dw_data.n_udw_plot <span class="op">-</span> plot_dw_data.n_udw_ann</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-display">
+<pre><code>Text(0.5, 1.0, 'Conserved forests')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-29-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Typically more fallen deadwood is left unannotated if the canopy cover is high.</p>
+<div class="cell">
+<div class="cell-output cell-output-display">
+<pre><code>Text(0.5, 1.0, 'Conserved forests')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-30-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>For standing deadwood the same effect is not present, at least it can’t be seen as clearly.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'l_dw_plot_diff'</span>] <span class="op">=</span> plot_dw_data.l_ddw <span class="op">-</span> plot_dw_data.l_gw_ann</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Relation between canopy cover percentage and total lengths of groundwood in field plots.</p>
+<div class="cell">
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-32-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Estimate within-plot volume of downed deadwood from annotations.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>anns_in_plots[<span class="st">'v_ddw'</span>] <span class="op">=</span> anns_in_plots.geometry.<span class="bu">apply</span>(cut_cone_volume)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'v_ddw_ann'</span>] <span class="op">=</span> plot_dw_data.<span class="bu">apply</span>(<span class="kw">lambda</span> row: anns_in_plots[(anns_in_plots.plot_id <span class="op">==</span> row.<span class="bu">id</span>) <span class="op">&amp;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                                                                        (anns_in_plots.layer <span class="op">==</span> <span class="st">'groundwood'</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                                                                       ].v_ddw.<span class="bu">sum</span>()</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                                              , axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'v_dw_plot'</span>] <span class="op">=</span> (plot_dw_data[<span class="st">'v_dw'</span>]<span class="op">/</span><span class="dv">10000</span>)<span class="op">*</span>np.pi<span class="op">*</span><span class="dv">9</span><span class="op">**</span><span class="dv">2</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'v_ddw_plot'</span>] <span class="op">=</span> (plot_dw_data[<span class="st">'v_ddw'</span>]<span class="op">/</span><span class="dv">10000</span>)<span class="op">*</span>np.pi<span class="op">*</span><span class="dv">9</span><span class="op">**</span><span class="dv">2</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>plot_dw_data[<span class="st">'v_udw_plot'</span>] <span class="op">=</span> plot_dw_data.v_dw_plot <span class="op">-</span> plot_dw_data.v_ddw_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-34-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Compare statistics for the total volume of fallen deadwood. First field data.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>pd.pivot_table(data<span class="op">=</span>plot_dw_data, index<span class="op">=</span>[<span class="st">'conservation'</span>], values<span class="op">=</span>[<span class="st">'v_ddw'</span>],</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>               aggfunc<span class="op">=</span>[<span class="st">'min'</span>, <span class="st">'max'</span>, <span class="st">'mean'</span>, <span class="st">'median'</span>,<span class="st">'std'</span>, <span class="st">'count'</span>], margins<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>min</th>
+      <th>max</th>
+      <th>mean</th>
+      <th>median</th>
+      <th>std</th>
+      <th>count</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>v_ddw</th>
+      <th>v_ddw</th>
+      <th>v_ddw</th>
+      <th>v_ddw</th>
+      <th>v_ddw</th>
+      <th>v_ddw</th>
+    </tr>
+    <tr>
+      <th>conservation</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.0</td>
+      <td>97.300652</td>
+      <td>22.922567</td>
+      <td>14.343594</td>
+      <td>26.380391</td>
+      <td>51</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.0</td>
+      <td>139.171786</td>
+      <td>42.482418</td>
+      <td>28.313861</td>
+      <td>42.481488</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>All</th>
+      <td>0.0</td>
+      <td>139.171786</td>
+      <td>28.432385</td>
+      <td>15.575737</td>
+      <td>32.641219</td>
+      <td>71</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Then estimation based on annotations.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>pd.pivot_table(data<span class="op">=</span>plot_dw_data, index<span class="op">=</span>[<span class="st">'conservation'</span>], values<span class="op">=</span>[<span class="st">'v_ddw_ann_ha'</span>],</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>               aggfunc<span class="op">=</span>[<span class="st">'min'</span>, <span class="st">'max'</span>, <span class="st">'mean'</span>, <span class="st">'median'</span>,<span class="st">'std'</span>, <span class="st">'count'</span>], margins<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>min</th>
+      <th>max</th>
+      <th>mean</th>
+      <th>median</th>
+      <th>std</th>
+      <th>count</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>v_ddw_ann_ha</th>
+      <th>v_ddw_ann_ha</th>
+      <th>v_ddw_ann_ha</th>
+      <th>v_ddw_ann_ha</th>
+      <th>v_ddw_ann_ha</th>
+      <th>v_ddw_ann_ha</th>
+    </tr>
+    <tr>
+      <th>conservation</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.0</td>
+      <td>64.201482</td>
+      <td>11.277266</td>
+      <td>6.746180</td>
+      <td>13.582354</td>
+      <td>51</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.0</td>
+      <td>43.360494</td>
+      <td>9.047403</td>
+      <td>5.115679</td>
+      <td>11.749208</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>All</th>
+      <td>0.0</td>
+      <td>64.201482</td>
+      <td>10.649135</td>
+      <td>5.661624</td>
+      <td>13.048417</td>
+      <td>71</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Plot the difference between volume based on field data and estimated volume based on annotations.</p>
+<div class="cell">
+<div class="cell-output cell-output-display">
+<pre><code>&lt;seaborn.axisgrid.FacetGrid&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-37-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Again, denser canopy means generally more difference.</p>
+</section>
+<section id="sudenpesänkangas" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="sudenpesänkangas"><span class="header-section-number">2</span> Sudenpesänkangas</h2>
+<p>Read data and do some wrangling.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>evo_fd_path <span class="op">=</span> Path(<span class="st">'../data/sudenpesankangas/'</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>evo_anns <span class="op">=</span> gpd.read_file(<span class="st">'../../data/raw/sudenpesankangas/virtual_plots/sudenpesankangas_deadwood.geojson'</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>evo_anns <span class="op">=</span> evo_anns.to_crs(<span class="st">'epsg:3067'</span>)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>evo_plot_circles <span class="op">=</span> gpd.read_file(evo_fd_path<span class="op">/</span><span class="st">'plot_circles.geojson'</span>)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>evo_plot_circles[<span class="st">'id'</span>] <span class="op">=</span> evo_plot_circles[<span class="st">'id'</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>evo_field_data <span class="op">=</span> pd.read_csv(evo_fd_path<span class="op">/</span><span class="st">'puutiedot_sudenpesänkangas.csv'</span>, sep<span class="op">=</span><span class="st">';'</span>, decimal<span class="op">=</span><span class="st">','</span>)</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>evo_field_data <span class="op">=</span> gpd.GeoDataFrame(evo_field_data, geometry<span class="op">=</span>gpd.points_from_xy(evo_field_data.gx, evo_field_data.gy), </span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>                                   crs<span class="op">=</span><span class="st">'epsg:3067'</span>)</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>evo_grid <span class="op">=</span> gpd.read_file(evo_fd_path<span class="op">/</span><span class="st">'vplots.geojson'</span>)</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>evo_grid <span class="op">=</span> evo_grid.to_crs(<span class="st">'epsg:3067'</span>)</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>evo_field_data[<span class="st">'plotid'</span>] <span class="op">=</span> evo_field_data.kaid <span class="op">+</span> <span class="dv">1000</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>evo_field_data <span class="op">=</span> evo_field_data[evo_field_data.puuluo.isin([<span class="dv">3</span>,<span class="dv">4</span>])]</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>cons_evo <span class="op">=</span> conservation_areas[conservation_areas.geometry.intersects(box(<span class="op">*</span>evo_anns.total_bounds))]</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>cons_evo <span class="op">=</span> gpd.clip(cons_evo, evo_grid)</span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> match_plotid_spk(geom, plots):</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> r <span class="kw">in</span> plots.itertuples():</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> r.geometry.contains(geom):</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> r.<span class="bu">id</span></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">None</span></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>evo_plots_updated <span class="op">=</span> pd.read_csv(evo_fd_path<span class="op">/</span><span class="st">'Koealatunnukset_Evo_2018.txt'</span>, sep<span class="op">=</span><span class="st">' '</span>)</span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>evo_plots_luke <span class="op">=</span> pd.read_csv(evo_fd_path<span class="op">/</span><span class="st">'Koealatunnukset_Evo_2018_LUKE.txt'</span>, sep<span class="op">=</span><span class="st">' '</span>)</span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>evo_plots_updated <span class="op">=</span> gpd.GeoDataFrame(evo_plots_updated, geometry<span class="op">=</span>gpd.points_from_xy(evo_plots_updated.x,</span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>                                                                                    evo_plots_updated.y),</span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>                                     crs<span class="op">=</span><span class="st">'epsg:3067'</span>)</span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>evo_plots_luke <span class="op">=</span> gpd.GeoDataFrame(evo_plots_luke, geometry<span class="op">=</span>gpd.points_from_xy(evo_plots_luke.x,</span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>                                                                              evo_plots_luke.y),</span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a>                                     crs<span class="op">=</span><span class="st">'epsg:3067'</span>)</span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a>evo_plots <span class="op">=</span> pd.concat([evo_plots_updated, evo_plots_luke])</span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a>evo_plots.rename(columns<span class="op">=</span> {c: c.replace(<span class="st">'.'</span>,<span class="st">'_'</span>) <span class="cf">for</span> c <span class="kw">in</span> evo_plots.columns}, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a>evo_plots[<span class="st">'spk_id'</span>] <span class="op">=</span> evo_plots.geometry.<span class="bu">apply</span>(<span class="kw">lambda</span> row: match_plotid_spk(row, evo_plot_circles))</span>
+<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a>evo_plots.dropna(subset<span class="op">=</span><span class="st">'spk_id'</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-39"><a href="#cb29-39" aria-hidden="true" tabindex="-1"></a>evo_plots[<span class="st">'geometry'</span>] <span class="op">=</span> evo_plots.spk_id.<span class="bu">apply</span>(<span class="kw">lambda</span> row: evo_plot_circles[evo_plot_circles.<span class="bu">id</span> <span class="op">==</span> row].geometry.iloc[<span class="dv">0</span>])</span>
+<span id="cb29-40"><a href="#cb29-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-41"><a href="#cb29-41" aria-hidden="true" tabindex="-1"></a>evo_plots.drop(columns<span class="op">=</span>[<span class="st">'id'</span>], inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb29-42"><a href="#cb29-42" aria-hidden="true" tabindex="-1"></a>evo_plots.rename(columns<span class="op">=</span>{<span class="st">'spk_id'</span>: <span class="st">'id'</span>}, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb29-43"><a href="#cb29-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-44"><a href="#cb29-44" aria-hidden="true" tabindex="-1"></a>evo_plots[<span class="st">'conservation'</span>] <span class="op">=</span> evo_plots.geometry.<span class="bu">apply</span>(<span class="kw">lambda</span> row: <span class="dv">1</span> <span class="cf">if</span> cons_evo.geometry.unary_union.intersects(row)</span>
+<span id="cb29-45"><a href="#cb29-45" aria-hidden="true" tabindex="-1"></a>                                                     <span class="cf">else</span> <span class="dv">0</span>)</span>
+<span id="cb29-46"><a href="#cb29-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-47"><a href="#cb29-47" aria-hidden="true" tabindex="-1"></a>evo_anns[<span class="st">'plot_id'</span>] <span class="op">=</span> evo_anns.<span class="bu">apply</span>(<span class="kw">lambda</span> row: <span class="bu">int</span>(row.vplot_id.split(<span class="st">'_'</span>)[<span class="dv">1</span>]), axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb29-48"><a href="#cb29-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-49"><a href="#cb29-49" aria-hidden="true" tabindex="-1"></a>evo_plots <span class="op">=</span> evo_plots[evo_plots.<span class="bu">id</span>.isin(evo_anns.plot_id.unique())]</span>
+<span id="cb29-50"><a href="#cb29-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-51"><a href="#cb29-51" aria-hidden="true" tabindex="-1"></a>evo_anns[<span class="st">'plot_id'</span>] <span class="op">=</span> evo_anns.<span class="bu">apply</span>(<span class="kw">lambda</span> row: match_circular_plot(row, evo_plots), axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb29-52"><a href="#cb29-52" aria-hidden="true" tabindex="-1"></a>evo_anns <span class="op">=</span> evo_anns.overlay(evo_plots[[<span class="st">'geometry'</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Add canopy density based on LiDAR derived canopy height model. The density is the percentage of field plot area with height above 2 meters.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>pcts <span class="op">=</span> []</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> rio.<span class="bu">open</span>(<span class="st">'../../data/raw/sudenpesankangas/full_mosaics/sudenpesankangas_chm.tif'</span>) <span class="im">as</span> src:</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> row <span class="kw">in</span> evo_plots.itertuples():</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>        plot_im, plot_tfm <span class="op">=</span> rio_mask.mask(src, [row.geometry], crop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>        pcts.append(plot_im[plot_im <span class="op">&gt;</span> <span class="dv">2</span>].shape[<span class="dv">0</span>] <span class="op">/</span> plot_im[plot_im <span class="op">&gt;=</span> <span class="dv">0</span>].shape[<span class="dv">0</span>])</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>evo_plots[<span class="st">'canopy_cover_pct'</span>] <span class="op">=</span> pcts</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>pd.pivot_table(data<span class="op">=</span>evo_plots, index<span class="op">=</span>[<span class="st">'conservation'</span>], values<span class="op">=</span>[<span class="st">'canopy_cover_pct'</span>],</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>               aggfunc<span class="op">=</span>[<span class="st">'min'</span>, <span class="st">'max'</span>, <span class="st">'mean'</span>, <span class="st">'std'</span>, <span class="st">'count'</span>], margins<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>min</th>
+      <th>max</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>count</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>canopy_cover_pct</th>
+      <th>canopy_cover_pct</th>
+      <th>canopy_cover_pct</th>
+      <th>canopy_cover_pct</th>
+      <th>canopy_cover_pct</th>
+    </tr>
+    <tr>
+      <th>conservation</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.237288</td>
+      <td>0.989960</td>
+      <td>0.782452</td>
+      <td>0.200439</td>
+      <td>42</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.678000</td>
+      <td>0.991992</td>
+      <td>0.869878</td>
+      <td>0.085901</td>
+      <td>29</td>
+    </tr>
+    <tr>
+      <th>All</th>
+      <td>0.237288</td>
+      <td>0.991992</td>
+      <td>0.818162</td>
+      <td>0.168393</td>
+      <td>71</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>As seen here, canopies in Evo are far more dense than in Hiidenportti.</p>
+<p>Count the number of deadwood instances similarly as for Hiidenportti data and plot the relationship between them.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>evo_plots[<span class="st">'n_dw_ann'</span>] <span class="op">=</span> evo_plots.<span class="bu">apply</span>(<span class="kw">lambda</span> row: evo_anns.plot_id.value_counts()[<span class="bu">int</span>(row.<span class="bu">id</span>)]</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>                                        <span class="cf">if</span> row.<span class="bu">id</span> <span class="kw">in</span> evo_anns.plot_id.unique() <span class="cf">else</span> <span class="dv">0</span>, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>evo_plots[<span class="st">'n_ddw_ann'</span>] <span class="op">=</span> evo_plots.<span class="bu">apply</span>(<span class="kw">lambda</span> row: evo_anns[evo_anns.label<span class="op">==</span><span class="st">'groundwood'</span>].plot_id.value_counts()[<span class="bu">int</span>(row.<span class="bu">id</span>)]</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>                                        <span class="cf">if</span> row.<span class="bu">id</span> <span class="kw">in</span> evo_anns[evo_anns.label<span class="op">==</span><span class="st">'groundwood'</span>].plot_id.unique() <span class="cf">else</span> <span class="dv">0</span>, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>evo_plots[<span class="st">'n_udw_ann'</span>] <span class="op">=</span> evo_plots.<span class="bu">apply</span>(<span class="kw">lambda</span> row: evo_anns[evo_anns.label<span class="op">!=</span><span class="st">'groundwood'</span>].plot_id.value_counts()[<span class="bu">int</span>(row.<span class="bu">id</span>)]</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>                                        <span class="cf">if</span> row.<span class="bu">id</span> <span class="kw">in</span> evo_anns[evo_anns.label<span class="op">!=</span><span class="st">'groundwood'</span>].plot_id.unique() <span class="cf">else</span> <span class="dv">0</span>, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>evo_plots[<span class="st">'n_dw_plot'</span>] <span class="op">=</span> np.<span class="bu">round</span>((evo_plots[<span class="st">'n_dw'</span>]<span class="op">/</span><span class="dv">10000</span>)<span class="op">*</span>np.pi<span class="op">*</span><span class="dv">9</span><span class="op">**</span><span class="dv">2</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>evo_plots[<span class="st">'n_ddw_plot'</span>] <span class="op">=</span> np.<span class="bu">round</span>((evo_plots[<span class="st">'n_ddw'</span>]<span class="op">/</span><span class="dv">10000</span>)<span class="op">*</span>np.pi<span class="op">*</span><span class="dv">9</span><span class="op">**</span><span class="dv">2</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>evo_plots[<span class="st">'n_udw_plot'</span>] <span class="op">=</span> evo_plots.n_dw_plot <span class="op">-</span> evo_plots.n_ddw_plot</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>evo_plots[<span class="st">'conservation'</span>] <span class="op">=</span> evo_plots.<span class="bu">apply</span>(<span class="kw">lambda</span> row: <span class="dv">1</span> <span class="cf">if</span> <span class="bu">any</span>(cons_evo.geometry.contains(row.geometry))</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>                                                        <span class="cf">else</span> <span class="dv">0</span>, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>evo_plots.pivot_table(index<span class="op">=</span><span class="st">'conservation'</span>, values<span class="op">=</span>[<span class="st">'n_ddw_plot'</span>, <span class="st">'n_udw_plot'</span>, <span class="st">'n_ddw_ann'</span>, <span class="st">'n_udw_ann'</span>], </span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>                         aggfunc<span class="op">=</span><span class="st">'sum'</span>, margins<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>n_ddw_ann</th>
+      <th>n_ddw_plot</th>
+      <th>n_udw_ann</th>
+      <th>n_udw_plot</th>
+    </tr>
+    <tr>
+      <th>conservation</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>65</td>
+      <td>14</td>
+      <td>14</td>
+      <td>68</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>22</td>
+      <td>29</td>
+      <td>29</td>
+      <td>92</td>
+    </tr>
+    <tr>
+      <th>All</th>
+      <td>87</td>
+      <td>43</td>
+      <td>43</td>
+      <td>160</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>For Evo dataset, we were able to annotate twice as much groundwood as there are in total in the field data, and only a quarter of the number of standing deadwood. Because Evo dataset is missing the field-measured information for deadwood height, we were not able to check whether the missing standing deadwood were, for instance, only a couple of meters tall and thus hidden below the canopy. Compared to Hiidenportti, the forest canopy in Evo was significantly thicker, as the average canopy cover percentage in the field plots was around 82%.</p>
+<div class="cell">
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-41-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Plot the plot-wise differences between field-measurements and annotations.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> sns.lmplot(data<span class="op">=</span>evo_plots, x<span class="op">=</span><span class="st">'n_udw_plot'</span>, y<span class="op">=</span><span class="st">'canopy_cover_pct'</span>, col<span class="op">=</span><span class="st">'conservation'</span>,</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>               hue<span class="op">=</span><span class="st">'conservation'</span>, ci<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>g.set_ylabels(<span class="st">'Canopy cover percentage in circular plot'</span>)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>g.set_xlabels(<span class="st">'Field-measured standing deadwood'</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-42-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> sns.lmplot(data<span class="op">=</span>evo_plots, x<span class="op">=</span><span class="st">'n_udw_ann'</span>, y<span class="op">=</span><span class="st">'canopy_cover_pct'</span>, col<span class="op">=</span><span class="st">'conservation'</span>,</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>               hue<span class="op">=</span><span class="st">'conservation'</span>, ci<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>g.set_ylabels(<span class="st">'Canopy cover percentage in circular plot'</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>g.set_xlabels(<span class="st">'Number of annotated standing deadwood'</span>)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-43-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> sns.lmplot(data<span class="op">=</span>evo_plots, x<span class="op">=</span><span class="st">'n_ddw_plot'</span>, y<span class="op">=</span><span class="st">'canopy_cover_pct'</span>, col<span class="op">=</span><span class="st">'conservation'</span>,</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>               hue<span class="op">=</span><span class="st">'conservation'</span>, ci<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>g.set_ylabels(<span class="st">'Canopy cover percentage in circular plot'</span>)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>g.set_xlabels(<span class="st">'Number of field-measured fallen deadwood'</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-44-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> sns.lmplot(data<span class="op">=</span>evo_plots, x<span class="op">=</span><span class="st">'n_ddw_ann'</span>, y<span class="op">=</span><span class="st">'canopy_cover_pct'</span>, col<span class="op">=</span><span class="st">'conservation'</span>,</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>               hue<span class="op">=</span><span class="st">'conservation'</span>, ci<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>g.set_ylabels(<span class="st">'Canopy cover percentage in circular plot'</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>g.set_xlabels(<span class="st">'Number of annotated fallen deadwood'</span>)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-45-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Again, denser canopy indicates less annotated fallen data.</p>
+<p>Same plots but for differences in numbers.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>evo_plots[<span class="st">'n_ddw_diff'</span>] <span class="op">=</span> evo_plots.n_ddw_plot <span class="op">-</span> evo_plots.n_ddw_ann</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>evo_plots[<span class="st">'n_udw_diff'</span>] <span class="op">=</span> evo_plots.n_udw_plot <span class="op">-</span> evo_plots.n_udw_ann</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>First for fallen deadwood.</p>
+<div class="cell">
+<div class="cell-output cell-output-display">
+<pre><code>&lt;seaborn.axisgrid.FacetGrid&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-47-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Then for standing deadwood.</p>
+<div class="cell">
+<div class="cell-output cell-output-display">
+<pre><code>&lt;seaborn.axisgrid.FacetGrid&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-48-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>See whether there is any realotion between the number of annotated fallen deadwood an canopy cover.</p>
+<div class="cell">
+<div class="cell-output cell-output-display">
+<pre><code>&lt;seaborn.axisgrid.FacetGrid&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-49-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Or the difference between the number of annotations (positive means more field data than annotated data) and canopy cover.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>evo_plots[<span class="st">'n_dw_plot_diff'</span>] <span class="op">=</span> evo_plots.n_dw_plot <span class="op">-</span> evo_plots.n_dw_ann</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-display">
+<pre><code>&lt;seaborn.axisgrid.FacetGrid&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-51-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Again, denser canopy indicates less annotated groundwood, and here also deadwood in general. However, Evo has such a low number of fallen deadwood that evaluating that is difficult.</p>
+<p>As Evo data doesn’t have field-measured deadwood lengths, we can’t plot that relationship. We can, however, plot the DBH distributions, even though Evo dataset only has 43 downed deadwood with dbh measured.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>evo_field_data <span class="op">=</span> evo_field_data[evo_field_data.plotid.isin(evo_plots.<span class="bu">id</span>.unique())]</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>evo_field_data[<span class="st">'conservation'</span>] <span class="op">=</span> evo_field_data.<span class="bu">apply</span>(<span class="kw">lambda</span> row: evo_plots[evo_plots.<span class="bu">id</span> <span class="op">==</span> row.plotid].conservation.unique()[<span class="dv">0</span>], axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-53-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-54-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Some statistics for field data.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>pd.pivot_table(data<span class="op">=</span>evo_field_data[(evo_field_data.puuluo <span class="op">==</span> <span class="dv">4</span>)<span class="op">&amp;</span>(evo_field_data.lapimitta_mm<span class="op">&gt;</span><span class="dv">0</span>)],</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>               index<span class="op">=</span>[<span class="st">'conservation'</span>], values<span class="op">=</span>[<span class="st">'est_pituus_m'</span>, <span class="st">'lapimitta_mm'</span>],</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>               aggfunc<span class="op">=</span>[<span class="st">'mean'</span>, <span class="st">'min'</span>, <span class="st">'max'</span>, <span class="st">'count'</span>], margins<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="2" halign="left">mean</th>
+      <th colspan="2" halign="left">min</th>
+      <th colspan="2" halign="left">max</th>
+      <th colspan="2" halign="left">count</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>est_pituus_m</th>
+      <th>lapimitta_mm</th>
+      <th>est_pituus_m</th>
+      <th>lapimitta_mm</th>
+      <th>est_pituus_m</th>
+      <th>lapimitta_mm</th>
+      <th>est_pituus_m</th>
+      <th>lapimitta_mm</th>
+    </tr>
+    <tr>
+      <th>conservation</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>13.609571</td>
+      <td>169.357143</td>
+      <td>5.934</td>
+      <td>55</td>
+      <td>34.211</td>
+      <td>552</td>
+      <td>14</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>11.905690</td>
+      <td>115.896552</td>
+      <td>5.446</td>
+      <td>45</td>
+      <td>28.101</td>
+      <td>445</td>
+      <td>29</td>
+      <td>29</td>
+    </tr>
+    <tr>
+      <th>All</th>
+      <td>12.460442</td>
+      <td>133.302326</td>
+      <td>5.446</td>
+      <td>45</td>
+      <td>34.211</td>
+      <td>552</td>
+      <td>43</td>
+      <td>43</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Same for annotated data.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>evo_anns[<span class="st">'tree_length'</span>] <span class="op">=</span> evo_anns.geometry.<span class="bu">apply</span>(get_len)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>pd.pivot_table(data<span class="op">=</span>evo_anns[evo_anns.label<span class="op">==</span><span class="st">'groundwood'</span>], index<span class="op">=</span>[<span class="st">'conservation'</span>], values<span class="op">=</span>[<span class="st">'tree_length'</span>, <span class="st">'diam'</span>],</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>               aggfunc<span class="op">=</span>[<span class="st">'mean'</span>, <span class="st">'min'</span>, <span class="st">'max'</span>, <span class="st">'count'</span>], margins<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="2" halign="left">mean</th>
+      <th colspan="2" halign="left">min</th>
+      <th colspan="2" halign="left">max</th>
+      <th colspan="2" halign="left">count</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>diam</th>
+      <th>tree_length</th>
+      <th>diam</th>
+      <th>tree_length</th>
+      <th>diam</th>
+      <th>tree_length</th>
+      <th>diam</th>
+      <th>tree_length</th>
+    </tr>
+    <tr>
+      <th>conservation</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>200.620326</td>
+      <td>2.520178</td>
+      <td>44.682490</td>
+      <td>0.251763</td>
+      <td>760.781151</td>
+      <td>9.225878</td>
+      <td>63</td>
+      <td>63</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>237.091999</td>
+      <td>2.592576</td>
+      <td>139.506761</td>
+      <td>0.535882</td>
+      <td>612.397653</td>
+      <td>6.664814</td>
+      <td>24</td>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>All</th>
+      <td>210.681477</td>
+      <td>2.540150</td>
+      <td>44.682490</td>
+      <td>0.251763</td>
+      <td>760.781151</td>
+      <td>9.225878</td>
+      <td>87</td>
+      <td>87</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Volume estimations for Evo data are really inaccurate, as most field data measurements are zero.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>evo_anns[<span class="st">'v_ddw'</span>] <span class="op">=</span> evo_anns.geometry.<span class="bu">apply</span>(cut_cone_volume)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>evo_plots[<span class="st">'v_ddw_ann'</span>] <span class="op">=</span> evo_plots.<span class="bu">apply</span>(<span class="kw">lambda</span> row: evo_anns[(evo_anns.plot_id <span class="op">==</span> row.<span class="bu">id</span>) <span class="op">&amp;</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>                                                              (evo_anns.label <span class="op">==</span> <span class="st">'groundwood'</span>)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>                                                              ].v_ddw.<span class="bu">sum</span>()</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>                                              , axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-display">
+<p><img src="2_comparing_annotations_and_field_data_files/figure-html/cell-58-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Statistics for volume based on annotations.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>pd.pivot_table(data<span class="op">=</span>evo_plots, index<span class="op">=</span>[<span class="st">'conservation'</span>], values<span class="op">=</span>[<span class="st">'v_ddw'</span>],</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>               aggfunc<span class="op">=</span>[<span class="st">'min'</span>, <span class="st">'max'</span>, <span class="st">'mean'</span>, <span class="st">'median'</span>,<span class="st">'std'</span>, <span class="st">'count'</span>], margins<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>min</th>
+      <th>max</th>
+      <th>mean</th>
+      <th>median</th>
+      <th>std</th>
+      <th>count</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>v_ddw</th>
+      <th>v_ddw</th>
+      <th>v_ddw</th>
+      <th>v_ddw</th>
+      <th>v_ddw</th>
+      <th>v_ddw</th>
+    </tr>
+    <tr>
+      <th>conservation</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.0</td>
+      <td>123.004587</td>
+      <td>5.522673</td>
+      <td>0.0</td>
+      <td>23.497052</td>
+      <td>42</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.0</td>
+      <td>98.258093</td>
+      <td>6.338610</td>
+      <td>0.0</td>
+      <td>18.873961</td>
+      <td>29</td>
+    </tr>
+    <tr>
+      <th>All</th>
+      <td>0.0</td>
+      <td>123.004587</td>
+      <td>5.855943</td>
+      <td>0.0</td>
+      <td>21.587804</td>
+      <td>71</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>pd.pivot_table(data<span class="op">=</span>evo_plots, index<span class="op">=</span>[<span class="st">'conservation'</span>], values<span class="op">=</span>[<span class="st">'v_ddw_ann_ha'</span>],</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>               aggfunc<span class="op">=</span>[<span class="st">'min'</span>, <span class="st">'max'</span>, <span class="st">'mean'</span>, <span class="st">'median'</span>,<span class="st">'std'</span>, <span class="st">'count'</span>], margins<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>min</th>
+      <th>max</th>
+      <th>mean</th>
+      <th>median</th>
+      <th>std</th>
+      <th>count</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>v_ddw_ann_ha</th>
+      <th>v_ddw_ann_ha</th>
+      <th>v_ddw_ann_ha</th>
+      <th>v_ddw_ann_ha</th>
+      <th>v_ddw_ann_ha</th>
+      <th>v_ddw_ann_ha</th>
+    </tr>
+    <tr>
+      <th>conservation</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.0</td>
+      <td>96.060293</td>
+      <td>7.991108</td>
+      <td>0.0</td>
+      <td>19.252499</td>
+      <td>42</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.0</td>
+      <td>71.154407</td>
+      <td>5.065659</td>
+      <td>0.0</td>
+      <td>13.517535</td>
+      <td>29</td>
+    </tr>
+    <tr>
+      <th>All</th>
+      <td>0.0</td>
+      <td>96.060293</td>
+      <td>6.796206</td>
+      <td>0.0</td>
+      <td>17.096402</td>
+      <td>71</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation column-body">
+  <div class="nav-page nav-page-previous">
+      <a href="./1_dataset_description_and_generation.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Dataset description and generation</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./3_mask_rcnn_model_training.html" class="pagination-link">
+        <span class="nav-page-text">Mask R-CNN model training</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
