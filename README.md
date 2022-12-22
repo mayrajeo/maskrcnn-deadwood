@@ -82,6 +82,7 @@ Model configs and weights are available [here](https://huggingface.co/mayrajeo/m
 * [Janne Mäyrä](github.com/jaeeolma), Finnish Environment Institute SYKE
 * Topi Tanhuanpää, University of Eastern Finland
 * Anton Kuzmin, University of Eastern Finland
+* Einari Heinaro, University of Helsinki
 * Timo Kumpula, University of Eastern Finland
 * Petteri Vihervaara, Finnish Environment Institute SYKE
 
